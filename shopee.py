@@ -1,9 +1,9 @@
 # Shopee Product Scrapper v1.0
 # heryandp
+# https://github.com/heryandp
 
 import requests as req
-import os,glob, json
-import csv
+import os,glob, json,time,csv
 
 # Base Url
 base_url = "https://shopee.co.id/"
@@ -44,6 +44,8 @@ class shopee():
         print("[+] Total Produk : "+str(cek_total["total_count"]))
         
         print("[+] Hapus file lama ...")
+        if not os.path.exists("data"):
+            os.makedirs("data")
         for filename in glob.glob("data/"+str(self.idseller)+"*.json"):
             os.remove(filename)
         for filename in glob.glob(str(self.idseller)+".csv"):
@@ -65,6 +67,7 @@ class shopee():
                     json.dump(cek_produk["items"], json_file)
                 a = a + 100
                 b = b + 1
+                time.sleep(3)
 
         # merging json
         print("[+] Merging data produk ...")
@@ -113,7 +116,7 @@ class shopee():
         print("done! "+str(self.idseller)+"_shopee.csv")
 
 print("[ SHOPEE-PRODUCT-GRABBER v1.0 by heryan ]")
-print("")
+print("[+] https://github.com/heryandp/shopee-product-scrap")
 sname = input("[+] Masukkan username seller: https://shopee.co.id/")        
 print("")
 act = shopee(sname)
