@@ -20,7 +20,7 @@ class shopee():
         try:
             url_seller = base_url+"api/v4/shop/get_shop_detail?username="+self.namatoko
             grab_seller = req.get(url_seller,headers=self.headerbrowser).json()
-            data_seller = {
+            self.data_seller = {
                 "name" : grab_seller["data"]["name"],
                 "userid" : grab_seller["data"]["userid"],
                 "shopid" : grab_seller["data"]["shopid"],
@@ -31,7 +31,7 @@ class shopee():
                 "country" : grab_seller["data"]["country"]
             }
             print("=== DETAIL SELLER ===")
-            print(data_seller)
+            print(self.data_seller)
             self.idseller = grab_seller["data"]["shopid"]
             self.grab_produk()
         except:
@@ -52,6 +52,7 @@ class shopee():
             os.remove(filename)
 
         print("[+] Mulai download produk ...")
+        print("\x1B[3m" +"(delay 3 detik untuk menghindari anti-spam!)"+"\x1B[0m")
         a = 0
         b = 0
         while (True):
@@ -61,8 +62,6 @@ class shopee():
             if (cek_produk["total_count"]==0):
                 break
             else:
-                # for product in cek_produk['items']:
-                #     print(product['item_basic']['name'])
                 with open("data/"+str(self.idseller)+"_"+str(b)+'.json', 'w') as json_file:
                     json.dump(cek_produk["items"], json_file)
                 a = a + 100
@@ -93,6 +92,8 @@ class shopee():
                 pmaxbd = i['item_basic']['price_max_before_discount']/100000
             f_data.append([
                 i['item_basic']['shopid'],
+                self.namatoko,
+                self.data_seller['name'],
                 i['item_basic']['itemid'],
                 i['item_basic']['name'],
                 i['item_basic']['stock'],
@@ -107,7 +108,7 @@ class shopee():
                 pmaxbd,
                 i['item_basic']['discount'],
                 ])
-        f_header = ['shopid','itemid','produk','stok','terjual','histori_terjual','brand','jml_like','harga','harga_min','harga_max','harga_min_sebelum_disc','harga_max_sebelum_disc','diskon']
+        f_header = ['shopid','username_toko','nama_toko','itemid','produk','stok','terjual','histori_terjual','brand','jml_like','harga','harga_min','harga_max','harga_min_sebelum_disc','harga_max_sebelum_disc','diskon']
         with open(str(self.idseller)+'_shopee.csv', 'w',newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
             writer.writerow(f_header)
@@ -116,7 +117,14 @@ class shopee():
         print("done! "+str(self.idseller)+"_shopee.csv")
 
 print("[ SHOPEE-PRODUCT-GRABBER v1.0 by heryan ]")
+print(" _____ _                           ")
+print("/  ___| |                          ")
+print("\ `--.| |__   ___  _ __   ___  ___ ")
+print(" `--. \ '_ \ / _ \| '_ \ / _ \/ _ /")
+print("/\__/ / | | | (_) | |_) |  __/  __/")
+print("\____/|_| |_|\___/| .__/ \___|\___|")
+print("                  | |              ")
+print("                  |_|              ")
 print("[+] https://github.com/heryandp/shopee-product-scrap")
 sname = input("[+] Masukkan username seller: https://shopee.co.id/")        
-print("")
 act = shopee(sname)
