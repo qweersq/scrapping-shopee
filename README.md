@@ -10,3 +10,7 @@ Req:
 Cara menggunakan:
 1. py shopee.py
 2. Masukkan username sellernya
+
+Link req:
+- https://www.python.org/downloads/
+- pip install requests bs4 progressbar progressbar2
