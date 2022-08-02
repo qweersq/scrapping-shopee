@@ -1,4 +1,4 @@
-# Shopee Product Scrapper v1.0
+# Shopee Product Scrapper v2.0
 # heryandp
 # https://github.com/heryandp
 
