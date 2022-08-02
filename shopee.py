@@ -73,7 +73,7 @@ class shopee_keyword():
         # merging json
         print("[+] Merging data keyword produk ...")
         data = []
-        for f in glob.glob("data/"+self.fn+"_shopee_*.json"):
+        for f in progressbar(glob.glob("data/"+self.fn+"_shopee_*.json")):
             with open(f,) as infile:
                 data.extend(json.load(infile))
         with open("data/"+self.fn+"_shopee_all.json",'w') as outfile:
@@ -235,12 +235,12 @@ class shopee():
         f.close()
         print("done! "+str(self.idseller)+"_shopee.csv")
 
-print("[ SHOPEE-PRODUCT-GRABBER v1.0 by heryan ]")
+print("[ SHOPEE-PRODUCT-GRABBER v2.0 by heryan ]")
 print(" _____ _                           ")
 print("/  ___| |                          ")
 print("\ `--.| |__   ___  _ __   ___  ___ ")
 print(" `--. \ '_ \ / _ \| '_ \ / _ \/ _ /")
-print("/\__/ / | | | (_) | |_) |  __/  __/")
+print("/\__/ / | | | (_) | |_) |  __/  __/   v.2.0")
 print("\____/|_| |_|\___/| .__/ \___|\___|")
 print("                  | |              ")
 print("                  |_|              ")
@@ -258,11 +258,11 @@ while(True):
         act = shopee(sname)
         break
     elif choice=="2":
-        keyword = input("[+] Masukkan keyword barang/produk (mis. tas wanita):")
-        lokasi = input("[+] Masukkan lokasi (provinsi/kosong=All, mis. Jawa Tengah):")
+        keyword = input("[+] Masukkan keyword barang/produk (mis. tas wanita) :")
+        lokasi = input("[+] Masukkan lokasi (provinsi/kosong=All, mis. Jawa Tengah) :")
         key = shopee_keyword(keyword,lokasi)
         break
     elif choice=="3":
         exit()
     else:
-        print("Oops! Ketik nomor 1 atau 2:")
+        print("Oops! Ketik nomor 1,2,atau 3 :")
