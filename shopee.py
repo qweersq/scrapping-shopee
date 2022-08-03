@@ -80,37 +80,40 @@ class shopee_seller():
         f = open("data/seller_"+self.fn+"_shopee_all.json")
         f_read = json.load(f)
         for i in progressbar(f_read):
-            # get detil seller
-            data = shopee_shop_detil.detil(i['shopid'])
             try:
-                desc = data['data']['description'].replace("\n","<br></br>").replace('"',"")
-                desc_encode = str(desc).encode("ascii","ignore")
-                desc_decode = desc_encode.decode()
+                # get detil seller
+                data = shopee_shop_detil.detil(i['shopid'])
+                try:
+                    desc = data['data']['description'].replace("\n","<br></br>").replace('"',"")
+                    desc_encode = str(desc).encode("ascii","ignore")
+                    desc_decode = desc_encode.decode()
+                except:
+                    desc = ""
+                t_aktif = datetime.datetime.fromtimestamp(data['data']['last_active_time']).strftime('%d-%m-%Y %H:%M:%S')
+                f_data.append([
+                    data['data']['userid'],
+                    data['data']['shopid'],
+                    data['data']['account']['username'],
+                    data['data']['name'],
+                    data['data']['country'],
+                    data['data']['shop_location'],
+                    data['data']['is_shopee_verified'],
+                    data['data']['is_official_shop'],
+                    data['data']['rating_normal'],
+                    data['data']['rating_bad'],
+                    data['data']['rating_good'],
+                    data['data']['cancellation_rate'],
+                    data['data']['rating_star'],
+                    data['data']['item_count'],
+                    data['data']['follower_count'],
+                    data['data']['response_rate'],
+                    data['data']['response_time'],
+                    data['data']['address'],
+                    t_aktif,
+                    desc_decode
+                    ])
             except:
-                desc = ""
-            t_aktif = datetime.datetime.fromtimestamp(data['data']['last_active_time']).strftime('%d-%m-%Y %H:%M:%S')
-            f_data.append([
-                data['data']['userid'],
-                data['data']['shopid'],
-                data['data']['account']['username'],
-                data['data']['name'],
-                data['data']['country'],
-                data['data']['shop_location'],
-                data['data']['is_shopee_verified'],
-                data['data']['is_official_shop'],
-                data['data']['rating_normal'],
-                data['data']['rating_bad'],
-                data['data']['rating_good'],
-                data['data']['cancellation_rate'],
-                data['data']['rating_star'],
-                data['data']['item_count'],
-                data['data']['follower_count'],
-                data['data']['response_rate'],
-                data['data']['response_time'],
-                data['data']['address'],
-                t_aktif,
-                desc_decode
-                ])
+                continue
             time.sleep(0.2)
         f_header = ['userid','shopid','username','nama_toko','negara','lokasi_toko','is_shopee_verified','is_official_shop','rating_normal','rating_bad','rating_good','cancelation_rate','total_rating','total_produk','total_follower','kec_respon_%','wkt_respon_detik','alamat','terakhir_aktif','deskripsi']
         with open('seller_'+str(self.fn)+'_shopee.csv', 'w',newline='', encoding='utf-8') as file:
@@ -185,37 +188,40 @@ class shopee_keyword():
         f = open("data/"+self.fn+"_shopee_all.json")
         f_read = json.load(f)
         for i in progressbar(f_read):
-            namatoko = shopee_shop_detil.detil(i['item_basic']['shopid'])
-            link_produk1 = str(i['item_basic']['name']).replace("/","-").replace(" ","-").replace("|","")
-            link_produk2 = base_url+link_produk1+"-i."+str(i['item_basic']['shopid'])+"."+str(i['item_basic']['itemid'])
-            time.sleep(0.2)
-            if(i['item_basic']['price_min_before_discount']==-1):
-                pminbd = 0
-            else:
-                pminbd = i['item_basic']['price_min_before_discount']/100000
-            if(i['item_basic']['price_max_before_discount']==-1):
-                pmaxbd = 0
-            else:
-                pmaxbd = i['item_basic']['price_max_before_discount']/100000
-            f_data.append([
-                i['item_basic']['shopid'],
-                namatoko['data']['account']['username'],
-                i['item_basic']['shop_location'],
-                i['item_basic']['itemid'],
-                i['item_basic']['name'],
-                i['item_basic']['stock'],
-                i['item_basic']['sold'],
-                i['item_basic']['historical_sold'],
-                i['item_basic']['brand'],
-                i['item_basic']['liked_count'],
-                i['item_basic']['price']/100000,
-                i['item_basic']['price_min']/100000,
-                i['item_basic']['price_max']/100000,
-                pminbd,
-                pmaxbd,
-                i['item_basic']['discount'],
-                link_produk2
-                ])
+            try:
+                namatoko = shopee_shop_detil.detil(i['item_basic']['shopid'])
+                link_produk1 = str(i['item_basic']['name']).replace("/","-").replace(" ","-").replace("|","")
+                link_produk2 = base_url+link_produk1+"-i."+str(i['item_basic']['shopid'])+"."+str(i['item_basic']['itemid'])
+                time.sleep(0.2)
+                if(i['item_basic']['price_min_before_discount']==-1):
+                    pminbd = 0
+                else:
+                    pminbd = i['item_basic']['price_min_before_discount']/100000
+                if(i['item_basic']['price_max_before_discount']==-1):
+                    pmaxbd = 0
+                else:
+                    pmaxbd = i['item_basic']['price_max_before_discount']/100000
+                f_data.append([
+                    i['item_basic']['shopid'],
+                    namatoko['data']['account']['username'],
+                    i['item_basic']['shop_location'],
+                    i['item_basic']['itemid'],
+                    i['item_basic']['name'],
+                    i['item_basic']['stock'],
+                    i['item_basic']['sold'],
+                    i['item_basic']['historical_sold'],
+                    i['item_basic']['brand'],
+                    i['item_basic']['liked_count'],
+                    i['item_basic']['price']/100000,
+                    i['item_basic']['price_min']/100000,
+                    i['item_basic']['price_max']/100000,
+                    pminbd,
+                    pmaxbd,
+                    i['item_basic']['discount'],
+                    link_produk2
+                    ])
+            except:
+                continue
         f_header = ['shopid','username_toko','lokasi_toko','itemid','produk','stok','terjual','histori_terjual','brand','jml_like','harga','harga_min','harga_max','harga_min_sebelum_disc','harga_max_sebelum_disc','diskon','url_produk']
         with open(str(self.fn)+'_shopee.csv', 'w',newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
