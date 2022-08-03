@@ -84,6 +84,8 @@ class shopee_seller():
             data = shopee_shop_detil.detil(i['shopid'])
             try:
                 desc = data['data']['description'].replace("\n","<br></br>").replace('"',"")
+                desc_encode = str(desc).encode("ascii","ignore")
+                desc_decode = desc_encode.decode()
             except:
                 desc = ""
             t_aktif = datetime.datetime.fromtimestamp(data['data']['last_active_time']).strftime('%d-%m-%Y %H:%M:%S')
@@ -108,7 +110,7 @@ class shopee_seller():
                 data['data']['response_time'],
                 data['data']['address'],
                 t_aktif,
-                desc
+                desc_decode
                 ])
             time.sleep(0.2)
         f_header = ['userid','shopid','username','nama_toko','negara','lokasi_toko','is_shopee_verified','is_official_shop','rating_normal','rating_bad','rating_good','cancelation_rate','total_rating','total_produk','total_follower','kec_respon_%','wkt_respon_detik','alamat','terakhir_aktif','deskripsi']
