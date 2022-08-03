@@ -102,7 +102,6 @@ class shopee_seller():
                 data['data']['rating_bad'],
                 data['data']['rating_good'],
                 data['data']['cancellation_rate'],
-                data['data']['shop_location'],
                 data['data']['rating_star'],
                 data['data']['item_count'],
                 data['data']['follower_count'],
