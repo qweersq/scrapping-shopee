@@ -8,7 +8,7 @@ Cara menggunakan:
 
 Req dan Link req:
 - https://www.python.org/downloads/
-- pip install requests bs4 progressbar progressbar2 colorama
+- Jalankan perintah melalui cmd "pip install requests bs4 progressbar progressbar2 colorama" atau klik install-req.bat
 
 Catatan:
-Script ini bertujuan untuk pembelajaran dan bukan untuk komersial. Segala risiko ditanggung oleh pengguna.
+Script ini bertujuan untuk pembelajaran dan bukan untuk komersial. Segala risiko ditanggung oleh pengguna

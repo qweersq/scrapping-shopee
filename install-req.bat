@@ -1,0 +1,1 @@
+pip install requests bs4 progressbar progressbar2 colorama
