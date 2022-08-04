@@ -1,4 +1,4 @@
-# Shopee Product Scrapper v2.0
+# Shopee Product Scrapper
 # heryandp
 # https://github.com/heryandp
 
@@ -341,7 +341,6 @@ class shopee():
         f.close()
         print("done! "+str(self.idseller)+"_shopee.csv")
 
-print(Fore.GREEN + "[ SHOPEE-PRODUCT-GRABBER v3.0 by heryan ]")
 print(" _____ _                           ")
 print("/  ___| |                          ")
 print("\ `--.| |__   ___  _ __   ___  ___ ")
@@ -350,22 +349,23 @@ print("/\__/ / | | | (_) | |_) |  __/  __/   v.3.0")
 print("\____/|_| |_|\___/| .__/ \___|\___|")
 print("                  | |              ")
 print("                  |_|              ")
+print(Fore.GREEN + "[ SHOPEE-PRODUCT-GRABBER v3.0 by heryan ]")
 print(Fore.GREEN + "[+] https://github.com/heryandp/shopee-product-scrap")
 while(True):
     print("===========================")
-    print("[+] Pilih metode grab/scrap:")
-    print("1) Username toko (download produk per toko)")
-    print("2) Keyword + Lokasi/Daerah (download produk terlaris)")
-    print("3) Keyword toko/username (download list toko)")
+    print("[+] Pilih metode grab/scrap")
+    print("1) Download produk per toko")
+    print("2) Download produk terlaris")
+    print("3) Download list toko")
     print("4) Keluar")
-    choice = input("Ketik nomor :")
+    choice = input("Ketik nomor (1 s.d. 4):")
     if choice=="1":
         sname = input("[+] Masukkan username seller: https://shopee.co.id/")        
         act = shopee(sname)
         break
     elif choice=="2":
         keyword = input("[+] Masukkan keyword barang/produk (mis. tas wanita) :")
-        lokasi = input("[+] Masukkan lokasi (provinsi/kosong=All, mis. Jawa Tengah) :")
+        lokasi = input("[+] Masukkan lokasi (provinsi/isi kosong=semua, mis. Jawa Tengah) :")
         key = shopee_keyword(keyword,lokasi)
         break
     elif choice=="3":
