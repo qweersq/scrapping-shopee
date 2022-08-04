@@ -1,6 +1,6 @@
 Shopee Product Scrapper v3.0
 
-!['ss'](https://user-images.githubusercontent.com/10804727/182559756-556b70d4-8e17-42d5-bf48-5633ab244201.png)
+!['ss'](https://user-images.githubusercontent.com/10804727/182760421-eacfcf19-3a67-4902-b637-c5f487e9de0b.png)
 
 Cara menggunakan:
 1. py shopee.py
