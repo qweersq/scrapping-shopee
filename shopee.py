@@ -40,43 +40,50 @@ class shopee_seller():
         get_sess = sess.cookies
         cookies_sess = get_sess.get_dict()
         print("=== GRABBING SELLER ===")
-        print("[+] Hapus file lama ...")
-        if not os.path.exists("data"):
-            os.makedirs("data")
-        for filename in glob.glob("data/seller_"+self.fn+"_shopee*.json"):
-            os.remove(filename)
-        for filename in glob.glob("data/seller_"+self.fn+"_shopee*.csv"):
-            os.remove(filename)
-        print("[+] Mulai download list seller ...")
-        print("\x1B[3m" +"(delay 5 detik untuk menghindari anti-spam!)"+"\x1B[0m")
-        a = 0
-        b = 1
-        while(True):
-            url_seller = base_url+"api/v4/search/search_user?keyword="+self.katakunci+"&limit=100&offset="+str(a)+"&page=search_user&with_search_cover=true"
-            cek_seller = req.get(url_seller,headers=self.headerbrowser,cookies=cookies_sess).json()
-            if (not cek_seller["data"]) or (not cek_seller["data"]["users"]):
-                # print(cek_seller)
-                break
-            else:
-                print("-> download halaman "+ str(b) +" ("+ str(len(cek_seller["data"]["users"])) +")")
-                # print(url_produk)
-                with open("data/seller_"+self.fn+"_shopee_"+str(b)+".json", 'w') as json_file:
-                    json.dump(cek_seller["data"]["users"], json_file)
-                a = a + 100
-                b = b + 1
-                time.sleep(5)
-        # merging json
-        print("[+] Merging data seller ...")
-        data = []
-        for f in progressbar(glob.glob("data/seller_"+self.fn+"_shopee_*.json")):
-            with open(f,) as infile:
-                data.extend(json.load(infile))
-        with open("data/seller_"+self.fn+"_shopee_all.json",'w') as outfile:
-            json.dump(data, outfile)
+        c = []
+        if os.path.exists("data/seller_"+self.fn+"_shopee_all.json"):
+            c = input("[+] Data sebelumnya ditemukan, seller_"+self.fn+"_shopee_all.json. Unduh data baru? (y/n) :")
+        if c == "y" or not c:
+            print("[+] Hapus file lama ...")
+            if not os.path.exists("data"):
+                os.makedirs("data")
+            if not os.path.exists("hasil"):
+                os.makedirs("hasil")
+            for filename in glob.glob("data/seller_"+self.fn+"_shopee*.json"):
+                os.remove(filename)
+            for filename in glob.glob("hasil/seller_"+self.fn+"_shopee*.csv"):
+                os.remove(filename)
+            print("[+] Mulai download list seller ...")
+            print("\x1B[3m" +"(delay 5 detik untuk menghindari anti-spam!)"+"\x1B[0m")
+            a = 0
+            b = 1
+            while(True):
+                url_seller = base_url+"api/v4/search/search_user?keyword="+self.katakunci+"&limit=100&offset="+str(a)+"&page=search_user&with_search_cover=true"
+                cek_seller = req.get(url_seller,headers=self.headerbrowser,cookies=cookies_sess).json()
+                if (not cek_seller["data"]) or (not cek_seller["data"]["users"]):
+                    # print(cek_seller)
+                    break
+                else:
+                    print("-> download halaman "+ str(b) +" ("+ str(len(cek_seller["data"]["users"])) +")")
+                    # print(url_produk)
+                    with open("data/seller_"+self.fn+"_shopee_"+str(b)+".json", 'w') as json_file:
+                        json.dump(cek_seller["data"]["users"], json_file)
+                    a = a + 100
+                    b = b + 1
+                    time.sleep(5)
+            # merging json
+            print("[+] Merging data seller ...")
+            data = []
+            for f in progressbar(glob.glob("data/seller_"+self.fn+"_shopee_*.json")):
+                with open(f,) as infile:
+                    data.extend(json.load(infile))
+            with open("data/seller_"+self.fn+"_shopee_all.json",'w') as outfile:
+                json.dump(data, outfile)
         # create csv
         print("[+] Membuat csv list seller ...")
         print("\x1B[3m" +"(sabar ya... grabbing detil list sellernya lumayan lama)"+"\x1B[0m")
         f_data = []
+        tmp_useller = []
         f = open("data/seller_"+self.fn+"_shopee_all.json")
         f_read = json.load(f)
         for i in progressbar(f_read):
@@ -90,6 +97,7 @@ class shopee_seller():
                 except:
                     desc = ""
                 t_aktif = datetime.datetime.fromtimestamp(data['data']['last_active_time']).strftime('%d-%m-%Y %H:%M:%S')
+                tmp_useller.append(data['data']['account']['username'])
                 f_data.append([
                     data['data']['userid'],
                     data['data']['shopid'],
@@ -116,12 +124,24 @@ class shopee_seller():
                 continue
             time.sleep(0.2)
         f_header = ['userid','shopid','username','nama_toko','negara','lokasi_toko','is_shopee_verified','is_official_shop','rating_normal','rating_bad','rating_good','cancelation_rate','total_rating','total_produk','total_follower','kec_respon_%','wkt_respon_detik','alamat','terakhir_aktif','deskripsi']
-        with open('seller_'+str(self.fn)+'_shopee.csv', 'w',newline='', encoding='utf-8') as file:
+        with open('hasil/seller_'+str(self.fn)+'_shopee.csv', 'w',newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
             writer.writerow(f_header)
             writer.writerows(f_data)
         f.close()
-        print("done! seller_"+str(self.fn)+"_shopee.csv")
+        c = input("[+] Lanjut grab produk per seller? Lumayan makan waktu lho. (y/n):")
+        if c=="y":
+            x = 1
+            t = len(tmp_useller)
+            for i in tmp_useller:
+                if x%5==0:
+                    print(Fore.RED+"-> cooldown bro!")
+                    time.sleep(5)
+                print(Fore.BLUE+"-> grabbing "+str(i)+" ("+str(x)+"/"+str(t)+")")
+                shopee(i)
+                x += 1
+        else:
+            print("done! hasil/seller_"+str(self.fn)+"_shopee.csv")
 class shopee_keyword():
     def __init__(self,keyword,lokasi):
         self.headerbrowser = ua
@@ -147,9 +167,11 @@ class shopee_keyword():
         print("[+] Hapus file lama ...")
         if not os.path.exists("data"):
             os.makedirs("data")
+        if not os.path.exists("hasil"):
+            os.makedirs("hasil")
         for filename in glob.glob("data/"+self.fn+"_shopee*.json"):
             os.remove(filename)
-        for filename in glob.glob("data/"+self.fn+"_shopee*.csv"):
+        for filename in glob.glob("hasil/"+self.fn+"_shopee*.csv"):
             os.remove(filename)
         print("[+] Mulai download produk ...")
         print("\x1B[3m" +"(delay 5 detik untuk menghindari anti-spam!)"+"\x1B[0m")
@@ -223,12 +245,12 @@ class shopee_keyword():
             except:
                 continue
         f_header = ['shopid','username_toko','lokasi_toko','itemid','produk','stok','terjual','histori_terjual','brand','jml_like','harga','harga_min','harga_max','harga_min_sebelum_disc','harga_max_sebelum_disc','diskon','url_produk']
-        with open(str(self.fn)+'_shopee.csv', 'w',newline='', encoding='utf-8') as file:
+        with open('hasil/'+str(self.fn)+'_shopee.csv', 'w',newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
             writer.writerow(f_header)
             writer.writerows(f_data)
         f.close()
-        print("done! "+str(self.fn)+"_shopee.csv")
+        print("done! hasil/"+str(self.fn)+"_shopee.csv")
 class shopee():
     def __init__(self, usernametoko):
         self.tokourl = base_url+usernametoko
@@ -267,9 +289,11 @@ class shopee():
         print("[+] Hapus file lama ...")
         if not os.path.exists("data"):
             os.makedirs("data")
+        if not os.path.exists("hasil"):
+            os.makedirs("hasil")
         for filename in glob.glob("data/"+str(self.idseller)+"*.json"):
             os.remove(filename)
-        for filename in glob.glob(str(self.idseller)+".csv"):
+        for filename in glob.glob("hasil/"+str(self.idseller)+".csv"):
             os.remove(filename)
 
         print("[+] Mulai download produk ...")
@@ -334,12 +358,12 @@ class shopee():
                 link_produk2
                 ])
         f_header = ['shopid','username_toko','nama_toko','lokasi_toko','itemid','produk','stok','terjual','histori_terjual','brand','jml_like','harga','harga_min','harga_max','harga_min_sebelum_disc','harga_max_sebelum_disc','diskon','url_produk']
-        with open(str(self.idseller)+'_shopee.csv', 'w',newline='', encoding='utf-8') as file:
+        with open('hasil/'+str(self.idseller)+'_shopee.csv', 'w',newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
             writer.writerow(f_header)
             writer.writerows(f_data)
         f.close()
-        print("done! "+str(self.idseller)+"_shopee.csv")
+        print("done! hasil/"+str(self.idseller)+"_shopee.csv")
 
 print(" _____ _                           ")
 print("/  ___| |                          ")
@@ -358,7 +382,7 @@ while(True):
     print("2) Download produk terlaris")
     print("3) Download list toko")
     print("4) Keluar")
-    choice = input("Ketik nomor (1 s.d. 4):")
+    choice = input("Ketik nomor (1 s.d 4):")
     if choice=="1":
         sname = input("[+] Masukkan username seller: https://shopee.co.id/")        
         act = shopee(sname)
@@ -375,4 +399,4 @@ while(True):
     elif choice=="4":
         exit()
     else:
-        print("Oops! Ketik nomor 1 s.d. 4 :")
+        print("Oops! Ketik nomor 1 s.d 4 :")
