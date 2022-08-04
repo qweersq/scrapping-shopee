@@ -9,3 +9,6 @@ Cara menggunakan:
 Req dan Link req:
 - https://www.python.org/downloads/
 - pip install requests bs4 progressbar progressbar2 colorama
+
+Catatan:
+Script ini bertujuan untuk pembelajaran dan bukan untuk komersial. Segala risiko ditanggung oleh pengguna.
