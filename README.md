@@ -6,7 +6,7 @@ Shopee Product Scrapper v3.0
 Windows
 ========
 Download dan jalankan setup.exe
-https://github.com/heryandp/shopee-product-scrap/releases/tag/shopee
+https://github.com/heryandp/shopee-product-scrap/releases/
 
 
 MacOs/Linux
