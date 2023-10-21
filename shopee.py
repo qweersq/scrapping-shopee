@@ -184,7 +184,7 @@ class shopee_keyword():
                 url_produk  = base_url+"api/v4/search/search_items?by=sales&keyword="+self.katakunci+"&limit=100&locations="+self.lokasikey+"&newest="+str(a)+"&order=desc&page_type=search&scenario=PAGE_GLOBAL_SEARCH&skip_autocorrect=1&version=2"
             cek_produk = req.get(url_produk,headers=self.headerbrowser,cookies=cookies_sess).json()
             if (cek_produk["total_count"]==0) or (not cek_produk['items']):
-                # print(cek_produk)
+                print(cek_produk)
                 break
             else:
                 print("-> download halaman "+ str(b) +" ("+ str(len(cek_produk["items"])) +")")
